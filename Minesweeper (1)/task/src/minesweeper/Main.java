@@ -15,11 +15,6 @@ public class Main {
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
                 myField[i][j] = ".";
-                /*if (random.nextBoolean()) {
-                    myField[i][j] = ".";
-                } else {
-                    myField[i][j] = "X";
-                }*/
             }
         }
 
@@ -34,27 +29,77 @@ public class Main {
         return myField;
     }
 
+    public String[][] countingMinesAround(String[][] minefield) {
+        int minesCount = 0;
+        String [][] extendedMineField = new String[minefield.length + 2][minefield.length + 2];
+        for (int i = 1; i < extendedMineField.length - 1; i++) {
+            for (int j = 1; j < extendedMineField.length - 1; j++) {
+                extendedMineField[i][j] = minefield[i - 1][j - 1];
+            }
+        }
+        for (int i = 0; i < extendedMineField.length; i++) {
+            extendedMineField[0][i] = ".";
+        }
+        for (int i = 0; i < extendedMineField.length; i++) {
+            extendedMineField[extendedMineField.length - 1][i] = ".";
+        }
+        for (int i = 0; i < extendedMineField.length; i++) {
+            extendedMineField[i][0] = ".";
+        }
+        for (int i = 0; i < extendedMineField.length; i++) {
+            extendedMineField[i][extendedMineField.length - 1] = ".";
+        }
+
+        for (int i = 1; i < extendedMineField.length - 1; i++) {
+            for (int j = 1; j < extendedMineField.length - 1; j++) {
+                if (minefield[i - 1][j - 1].equals(".")) {
+                    minesCount = 0;
+                    if (extendedMineField[i - 1][j - 1].equals("X")) {
+                        minesCount++;
+                    }
+                    if (extendedMineField[i][j - 1].equals("X")) {
+                        minesCount++;
+                    }
+                    if (extendedMineField[i + 1][j - 1].equals("X")) {
+                        minesCount++;
+                    }
+                    if (extendedMineField[i - 1][j].equals("X")) {
+                        minesCount++;
+                    }
+                    if (extendedMineField[i + 1][j].equals("X")) {
+                        minesCount++;
+                    }
+                    if (extendedMineField[i - 1][j + 1].equals("X")) {
+                        minesCount++;
+                    }
+                    if (extendedMineField[i][j + 1].equals("X")) {
+                        minesCount++;
+                    }
+                    if (extendedMineField[i + 1][j + 1].equals("X")) {
+                        minesCount++;
+                    }
+                    if (minesCount > 0) {
+                        minefield[i - 1][j - 1] = String.valueOf(minesCount);
+                    }
+                }
+
+            }
+        }
+
+
+        return minefield;
+    }
+
 
 
     public static void main(String[] args) {
-        // write your code here
-        /*String[][] myArray = {
-                {".", "X", ".",".",".",".",".",".","."},
-                {".", ".", ".",".",".","X",".",".","X"},
-                {".", ".", ".",".","X",".",".",".","."},
-                {".", ".", "X",".",".",".",".",".","."},
-                {".", ".", ".","X",".",".",".",".","."},
-                {".", "X", ".",".",".",".",".",".","."},
-                {".", "X", ".",".",".",".",".",".","."},
-                {".", ".", ".",".",".",".","X",".","."},
-                {".", ".", ".",".",".","X",".",".","."},
 
-        };*/
         Main newMain = new Main();
         String[][] myArray = newMain.createRandomField();
+        String[][] extended = newMain.countingMinesAround(myArray);
 
         View game = new View();
-        game.setGameField(myArray);
+        game.setGameField(extended);
         game.displayField();
     }
 }
