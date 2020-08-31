@@ -1,7 +1,5 @@
 package minesweeper;
 
-import java.lang.reflect.Array;
-
 public class View {
 
     private String[][] gameField;
