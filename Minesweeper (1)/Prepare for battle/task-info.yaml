@@ -521,6 +521,54 @@ files:
         }
     }
   learner_created: false
+- name: src/minesweeper/View.java
+  visible: true
+  text: |
+    package minesweeper;
+
+    public class View {
+
+        private String[][] gameField;
+
+        public void setGameField(String[][] gameField) {
+            this.gameField = gameField;
+        }
+
+        public String[][] getGameField() {
+            return gameField;
+        }
+
+        public void displayField() {
+            System.out.println(" │123456789│");
+            System.out.println("—│—————————│");
+            System.out.print(toString());
+            System.out.println("—│—————————│");
+
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder gameFieldString = new StringBuilder();
+            int i = 1;
+            for (String[] strings : gameField) {
+                gameFieldString.append(i).append("|");
+                for (String string : strings) {
+                    gameFieldString.append(string);
+                }
+                gameFieldString.append("|\r\n");
+                i = i + 1;
+            }
+            return String.valueOf(gameFieldString);
+        }
+    }
+  learner_created: true
+- name: src/minesweeper/Game.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/77/stages/429/implement
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations! Continue on <a href="https://hyperskill.org/projects/77/stages/429/implement">JetBrains
+    Academy</a>
+  time: Wed, 02 Sep 2020 17:36:10 UTC
 record: -1
