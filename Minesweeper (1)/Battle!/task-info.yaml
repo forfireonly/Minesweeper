@@ -479,6 +479,124 @@ files:
         }
     }
   learner_created: false
+- name: src/minesweeper/Game.java
+  visible: true
+  text: |+
+    package minesweeper;
+
+    import java.io.IOException;
+    import java.util.Arrays;
+
+    public class Game {
+
+        Main newMain = new Main();
+        View gameView = new View();
+
+        public void runGame() throws IOException {
+
+
+            String[][] myArray = newMain.createRandomField();
+            String[][] extended = newMain.countingMinesAround(myArray);
+            String[][] filedShowingMines = new String[9][9];
+
+            for (int i = 0; i < 9; i++) {
+                System.arraycopy(extended[i], 0, filedShowingMines[i], 0, 9);
+            }
+
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    if (extended[i][j].equals("*")) {
+                        extended[i][j] = ".";
+                    }
+                }
+            }
+
+                gameView.setGameField(extended);
+                gameView.displayField();
+
+                String coordinatesString;
+                String[] coordinatesArray;
+
+                int row;
+                int column;
+
+                boolean isSolved = false;
+                while (!isSolved) {
+                    System.out.println("Set/delete mines marks (x and y coordinates):");
+                    coordinatesString = Main.reader.readLine();
+                    coordinatesArray = coordinatesString.split(" ");
+                    column = Integer.parseInt(coordinatesArray[0]) - 1;
+                    row = Integer.parseInt(coordinatesArray[1]) - 1;
+                    if (extended[row][column].equals(".")) {
+                        extended[row][column] = "*";
+                        gameView.displayField();
+                        isSolved = Arrays.deepEquals(extended, filedShowingMines);
+
+                    } else if (extended[row][column].equals("*")) {
+                        extended[row][column] = ".";
+                        gameView.displayField();
+                        isSolved = Arrays.deepEquals(extended, filedShowingMines);
+
+                    } else {
+                        System.out.println("There is a number here!");
+                    }
+                }
+
+                System.out.println("Congratulations! You found all mines!");
+            }
+
+        }
+
+
+
+
+
+  learner_created: true
+- name: src/minesweeper/View.java
+  visible: true
+  text: |
+    package minesweeper;
+
+    public class View {
+
+        private String[][] gameField;
+
+        public void setGameField(String[][] gameField) {
+            this.gameField = gameField;
+        }
+
+        public String[][] getGameField() {
+            return gameField;
+        }
+
+        public void displayField() {
+            System.out.println(" │123456789│");
+            System.out.println("—│—————————│");
+            System.out.print(toString());
+            System.out.println("—│—————————│");
+
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder gameFieldString = new StringBuilder();
+            int i = 1;
+            for (String[] strings : gameField) {
+                gameFieldString.append(i).append("|");
+                for (String string : strings) {
+                    gameFieldString.append(string);
+                }
+                gameFieldString.append("|\r\n");
+                i = i + 1;
+            }
+            return String.valueOf(gameFieldString);
+        }
+    }
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/77/stages/430/implement
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations! Continue on <a href="https://hyperskill.org/projects/77/stages/430/implement">JetBrains
+    Academy</a>
+  time: Tue, 22 Sep 2020 01:20:31 UTC
 record: -1

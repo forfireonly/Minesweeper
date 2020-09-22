@@ -3,16 +3,58 @@ package minesweeper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Random;
 
 
 public class Main {
     public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    public static HashMap<Integer, Integer> mines = new HashMap<>();
+
+    int row;
+    int column;
+    String freeOrMine;
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public String getFreeOrMine() {
+        return freeOrMine;
+    }
 
     public String[][] createRandomField() throws IOException {
+        String coordinatesString;
+        String[] coordinatesArray;
+
         var random = new Random();
         System.out.println("How many mines do you want on the field?");
         int numberOfMines = Integer.parseInt(reader.readLine());
+
+        View startingField = new View();
+        String[][] startFiledLook = new String[9][9];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                startFiledLook[i][j] = ".";
+            }
+        }
+
+        startingField.setGameField(startFiledLook);
+        startingField.displayField();
+
+        System.out.println("Set/unset mines marks or claim a cell as free: ");
+
+        coordinatesString = Main.reader.readLine();
+        coordinatesArray = coordinatesString.split(" ");
+        column = Integer.parseInt(coordinatesArray[0]) - 1;
+        row = Integer.parseInt(coordinatesArray[1]) - 1;
+        freeOrMine = coordinatesArray[2];
+
+        System.out.println();
 
         String[][] myField = new String[9][9];
         for (var i = 0; i < 9; i++) {
@@ -21,17 +63,30 @@ public class Main {
             }
         }
 
-        while (numberOfMines > 0) {
+        if (freeOrMine.equals("free")) {
+            myField[row][column] = "/";
+        } else if (freeOrMine.equals("mine")) {
+            myField[row][column] = "*";
+        }
 
-            int i = random.nextInt(9);
-            int j = random.nextInt(9);
-            if (!myField[i][j].equals("*")) {
-            myField[i][j] = "*";
+       // while (numberOfMines > 0) {
+        for (int i = 0; i < myField.length; i++) {
+            for (int j = 0; j < myField.length; j++) {
+
+            //int i = random.nextInt(9);
+            //int j = random.nextInt(9);
+            if (!myField[i][j].equals("*") && j != column && i != row && j != column - 1
+                    && i != row - 1 && j != column + 1 && i != row + 1) {
+                myField[i][j] = "*";
+                mines.put(i, j);
 
                 numberOfMines--;
             }
+            }
         }
-        return myField;
+        //}
+
+        return countingMinesAround(myField);
     }
 
     public String[][] countingMinesAround(String[][] minefield) {
